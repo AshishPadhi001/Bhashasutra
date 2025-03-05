@@ -2,6 +2,38 @@ from Functions.basic import Basic
 from Functions.advanced import Advanced
 from Functions.text_visualization import TextVisualization
 
+def main_menu():
+    while True:
+        print("\nSelect Input Method:")
+        print("1. Enter Raw Text")
+        print("2. Upload a File")
+        choice = input("Select an option (1-2): ").strip()
+        
+        if choice == "1":
+            return input("Enter your text: ")
+        elif choice == "2":
+            return file_menu()
+        else:
+            print("Invalid choice. Please enter 1 or 2.")
+
+def file_menu():
+    while True:
+        print("\nSelect File Type:")
+        print("1. TXT File")
+        print("2. DOCX File")
+        print("3. PDF File")
+        choice = input("Select an option (1-3): ").strip()
+        
+        file_types = {"1": "txt", "2": "docx", "3": "pdf"}
+        if choice in file_types:
+            file_path = input(f"Enter the {file_types[choice].upper()} file path: ").strip()
+            if not file_path.endswith(f".{file_types[choice]}"):
+                print(f"Invalid file type. Please enter a {file_types[choice].upper()} file.")
+                continue
+            return file_path
+        else:
+            print("Invalid choice. Please select 1, 2, or 3.")
+
 def basic_menu(basic):
     menu = {
         "1": "Count Words",
@@ -71,10 +103,18 @@ def visualization_menu(text):
         print("\nResult:", result)
 
 def main():
-    file_path = input("Enter the file path: ")
-    basic = Basic(file_path)
-    advanced = Advanced(file_path)
-    text = basic.text  # Extract text for visualization
+    user_input = main_menu()
+    
+    if isinstance(user_input, str) and user_input.endswith(('.txt', '.docx', '.pdf')):
+        basic = Basic(user_input)
+        advanced = Advanced(user_input)
+        text = basic.text  # Extract text for visualization
+    else:
+        basic = Basic(None)
+        advanced = Advanced(None)
+        basic.text = user_input  # Set raw text manually
+        advanced.text = user_input
+        text = user_input  # Use raw text for visualization
     
     while True:
         print("\nMain Menu:")

@@ -57,11 +57,12 @@ class Basic:
         counter = Counter(words)
         return min(counter.items(), key=lambda x: x[1]) if counter else ("None", 0)
     
-    def convert_to_lowercase(self):
-        return self.text.lower()
+    def convert_to_lowercase(self, text=None):
+        return (text or self.text).lower()
+
     
-    def convert_to_uppercase(self):
-        return self.text.upper()
+    def convert_to_uppercase(self,text=None):
+        return (text or self.text).upper()
     
     def process(self, choice):
         options = {
