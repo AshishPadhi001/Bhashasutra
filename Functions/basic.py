@@ -10,9 +10,11 @@ class Basic:
         if isinstance(input_data, str) and os.path.exists(input_data):
             self.file_path = input_data
             self.text = self.extract_text()
-        else:
+        elif isinstance(input_data, str):  # Directly accept raw text
             self.file_path = None
-            self.text = input_data if isinstance(input_data, str) else ""
+            self.text = input_data.strip()
+        else:
+            raise ValueError("Input must be a file path or raw text string.")
 
     def extract_text(self):
         ext = os.path.splitext(self.file_path)[1].lower()
