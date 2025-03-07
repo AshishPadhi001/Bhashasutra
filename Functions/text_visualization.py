@@ -1,3 +1,6 @@
+import os
+import matplotlib
+matplotlib.use('Agg')  # Use a non-interactive backend
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from collections import Counter

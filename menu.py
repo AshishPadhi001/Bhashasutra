@@ -1,3 +1,4 @@
+import os
 from Functions.basic import Basic
 from Functions.text_visualization import TextVisualization
 from Functions.advanced import Advanced
