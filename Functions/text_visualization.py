@@ -1,4 +1,3 @@
-import os
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from collections import Counter
