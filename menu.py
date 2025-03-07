@@ -51,10 +51,9 @@ def main():
     user_input = main_menu()
     
     is_file = isinstance(user_input, str) and user_input.endswith((".txt", ".docx", ".pdf"))
-    basic = Basic(user_input if is_file else None)
-    advanced = Advanced(user_input if is_file else None)
-    basic.text = advanced.text = user_input if not is_file else basic.text
-    text = basic.text
+    basic = Basic(user_input if is_file else user_input)
+    advanced = Advanced(user_input if is_file else user_input)
+    text = advanced.text
     
     while True:
         print("\nMain Menu:")
@@ -69,7 +68,7 @@ def main():
             menu_handler({
                 "1": "Count Words", "2": "Count Punctuation", "3": "Show Most Repeated Word",
                 "4": "Show Least Repeated Word", "5": "Convert to Lowercase", "6": "Convert to Uppercase",
-                "7": "Back to Main Menu"
+                "7": "Remove Punctuation", "8": "Back to Main Menu"
             }, basic.process)
         elif choice == "2":
             menu_handler({
@@ -80,7 +79,7 @@ def main():
         elif choice == "3":
             menu_handler({
                 "1": "Generate Word Cloud", "2": "Word Frequency Plot", "3": "Back to Main Menu"
-            }, TextVisualization(text).process)
+            }, lambda x: TextVisualization(text).process(x))
         elif choice == "4":
             print("Exiting the program. Goodbye!")
             break
