@@ -17,6 +17,9 @@ class Basic:
             raise ValueError("Input must be a file path or raw text string.")
 
     def extract_text(self):
+        if not self.file_path:
+            return self.text
+        
         ext = os.path.splitext(self.file_path)[1].lower()
         if ext == ".pdf":
             return self.extract_text_from_pdf()
@@ -66,14 +69,22 @@ class Basic:
 
     def convert_to_uppercase(self, text=None):
         return (text or self.text).upper()
+    
+    def remove_punctuation(self, text=None):
+        return re.sub(f"[{string.punctuation}]", "", text or self.text)
 
     def process(self, choice):
-        options = {
+        functions = {
             "1": self.count_words,
             "2": self.count_punctuation,
             "3": self.show_most_repeated_word,
             "4": self.show_least_repeated_word,
             "5": self.convert_to_lowercase,
-            "6": self.convert_to_uppercase
+            "6": self.convert_to_uppercase,
+            "7": self.remove_punctuation
         }
-        return options.get(choice, lambda: "Invalid choice")()
+        
+        if choice in functions:
+            return functions[choice]()
+        else:
+            return "Invalid choice"

@@ -23,35 +23,32 @@ class Advanced:
         self.show_least_repeated_word = self.basic.show_least_repeated_word
         self.convert_to_lowercase = self.basic.convert_to_lowercase
         self.convert_to_uppercase = self.basic.convert_to_uppercase
-        self.text = self.basic.text  # Extracted from file or direct raw text
+        self.remove_punctuation = self.basic.remove_punctuation
+        self.text = self.remove_punctuation(self.convert_to_lowercase(self.basic.text))
 
     def word_tokenizer(self):
-        return word_tokenize(self.text.lower())
+        return word_tokenize(self.text)
 
     def sentence_tokenizer(self):
         return sent_tokenize(self.text)
 
     def remove_stopwords(self):
-        tokens = word_tokenize(self.text.lower())
+        tokens = word_tokenize(self.text)
         stop_words = set(stopwords.words('english'))
         return [word for word in tokens if word not in stop_words]
 
     def perform_stemming(self):
-        tokens = word_tokenize(self.convert_to_lowercase(self.text))
-        stop_words = set(stopwords.words('english'))
-        filtered_tokens = [word for word in tokens if word not in stop_words]
+        tokens = self.remove_stopwords()
         stemmer = PorterStemmer()
-        return [stemmer.stem(word) for word in filtered_tokens]
+        return [stemmer.stem(word) for word in tokens]
 
     def perform_lemmatization(self):
-        tokens = word_tokenize(self.convert_to_lowercase(self.text))
-        stop_words = set(stopwords.words('english'))
-        filtered_tokens = [word for word in tokens if word not in stop_words]
+        tokens = self.remove_stopwords()
         lemmatizer = WordNetLemmatizer()
-        return [lemmatizer.lemmatize(word) for word in filtered_tokens]
+        return [lemmatizer.lemmatize(word) for word in tokens]
 
     def pos_tagging(self):
-        tokens = word_tokenize(self.convert_to_lowercase(self.text))
+        tokens = word_tokenize(self.text)
 
         if not tokens:
             return ["No tokens available for POS tagging."]
@@ -78,14 +75,12 @@ class Advanced:
         return tagged_words
 
     def sentiment_analysis(self):
-        tokens = word_tokenize(self.convert_to_lowercase(self.text))
-        stop_words = set(stopwords.words('english'))
-        filtered_tokens = [word for word in tokens if word not in stop_words]
+        tokens = self.remove_stopwords()
 
-        if not filtered_tokens:
+        if not tokens:
             return "No text available."
 
-        sentiment = TextBlob(' '.join(filtered_tokens)).sentiment
+        sentiment = TextBlob(' '.join(tokens)).sentiment
         polarity = sentiment.polarity
 
         sentiment_category = (
@@ -97,14 +92,12 @@ class Advanced:
         return {"sentiment": sentiment_category, "polarity": polarity, "subjectivity": sentiment.subjectivity}
 
     def tfidf_vectorization(self):
-        tokens = word_tokenize(self.convert_to_lowercase(self.text))
-        stop_words = set(stopwords.words('english'))
-        filtered_tokens = [word for word in tokens if word not in stop_words]
+        tokens = self.remove_stopwords()
 
-        if not filtered_tokens:
+        if not tokens:
             return "No valid words available for TF-IDF vectorization."
 
-        preprocessed_text = ' '.join(filtered_tokens)
+        preprocessed_text = ' '.join(tokens)
         vectorizer = TfidfVectorizer()
         tfidf_matrix = vectorizer.fit_transform([preprocessed_text])
         df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
