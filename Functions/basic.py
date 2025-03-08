@@ -72,7 +72,36 @@ class Basic:
     
     def remove_punctuation(self, text=None):
         return re.sub(f"[{string.punctuation}]", "", text or self.text)
+    
+    def remove_numbers(self):
+        return re.sub(r'\d+', '', self.text)
 
+    def remove_extra_whitespace(self):
+        return re.sub(r'\s+', ' ', self.text).strip()
+    
+    def find_average_word_length(self):
+        words = re.findall(r'\b\w+\b', self.text)
+        return sum(len(word) for word in words) / len(words) if words else 0
+
+    def find_average_sentence_length(self):
+        sentences = re.split(r'[.!?]', self.text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+        return sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+    
+    def replace_word(self, old_word, new_word):
+        return self.text.replace(old_word, new_word)
+    
+    def reverse_text(self):
+        return self.text[::-1]
+    
+    def count_unique_words(self):
+        words = re.findall(r'\b\w+\b', self.text)
+        return len(set(words))
+    
+    def extract_proper_nouns(self):
+        words = re.findall(r'\b[A-Z][a-z]*\b', self.text)
+        return list(set(words))
+    
     def process(self, choice):
         functions = {
             "1": self.count_words,
@@ -81,7 +110,15 @@ class Basic:
             "4": self.show_least_repeated_word,
             "5": self.convert_to_lowercase,
             "6": self.convert_to_uppercase,
-            "7": self.remove_punctuation
+            "7": self.remove_punctuation,
+            "8": self.remove_numbers,
+            "9": self.remove_extra_whitespace,
+            "10": self.find_average_word_length,
+            "11": self.find_average_sentence_length,
+            "12": lambda: self.replace_word(input("Enter word to replace: "), input("Enter new word: ")),
+            "13": self.reverse_text,
+            "14": self.count_unique_words,
+            "15": self.extract_proper_nouns
         }
         
         if choice in functions:
