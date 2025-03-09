@@ -1,2 +1,10 @@
 venv/
 __pycache__
+
+__init__
+
+*.pyc
+
+.env
+
+__init__
