@@ -7,6 +7,8 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 from textblob import TextBlob
 import pandas as pd
 from Functions.basic import Basic  # Import the Basic class
+from langdetect import detect  # Language detection
+from gensim.summarization import summarize  # Extractive summarization
 
 class Advanced:
     def __init__(self, input_data):
@@ -49,11 +51,8 @@ class Advanced:
 
     def pos_tagging(self):
         tokens = word_tokenize(self.text)
-
         if not tokens:
             return ["No tokens available for POS tagging."]
-
-        # Simple rule-based POS tagging (fallback method)
         pos_rules = {
             r".*ing$": "VBG",  # Gerunds (e.g., running)
             r".*ed$": "VBD",  # Past tense (e.g., played)
@@ -62,7 +61,6 @@ class Advanced:
             r".*able$|.*ible$": "JJ",  # Adjectives (e.g., flexible)
             r".*ion$": "NN",  # Nouns (e.g., revolution)
         }
-
         tagged_words = []
         for word in tokens:
             tag = "NN"  # Default to noun
@@ -71,39 +69,33 @@ class Advanced:
                     tag = pos
                     break
             tagged_words.append((word, tag))
-
         return tagged_words
-
-    def sentiment_analysis(self):
-        tokens = self.remove_stopwords()
-
-        if not tokens:
-            return "No text available."
-
-        sentiment = TextBlob(' '.join(tokens)).sentiment
-        polarity = sentiment.polarity
-
-        sentiment_category = (
-            "Positive" if polarity > 0 else
-            "Negative" if polarity < 0 else
-            "Neutral"
-        )
-
-        return {"sentiment": sentiment_category, "polarity": polarity, "subjectivity": sentiment.subjectivity}
 
     def tfidf_vectorization(self):
         tokens = self.remove_stopwords()
-
         if not tokens:
             return "No valid words available for TF-IDF vectorization."
-
         preprocessed_text = ' '.join(tokens)
         vectorizer = TfidfVectorizer()
         tfidf_matrix = vectorizer.fit_transform([preprocessed_text])
         df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
         top_words = df.T.sort_values(by=0, ascending=False).head(10)
-
         return {"Top TF-IDF Words": top_words.index.tolist(), "TF-IDF Scores": top_words[0].tolist()}
+
+    def text_summarization(self):
+        try:
+            return summarize(self.text)
+        except ValueError:
+            return "Text too short to summarize."
+
+    def language_detection(self):
+        try:
+            return detect(self.text)
+        except:
+            return "Could not detect language."
+
+    def spell_check_and_grammar(self):
+        return str(TextBlob(self.text).correct())
 
     def process(self, choice):
         """
@@ -122,7 +114,9 @@ class Advanced:
             "4": self.perform_stemming,
             "5": self.perform_lemmatization,
             "6": self.pos_tagging,
-            "7": self.sentiment_analysis,
-            "8": self.tfidf_vectorization
+            "7": self.tfidf_vectorization,
+            "8": self.text_summarization,
+            "9": self.language_detection,
+            "10": self.spell_check_and_grammar
         }
         return options.get(choice, lambda: "Invalid choice")()

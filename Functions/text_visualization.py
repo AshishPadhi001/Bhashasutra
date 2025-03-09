@@ -2,14 +2,18 @@ import os
 import matplotlib
 matplotlib.use('Agg')  # Use a non-interactive backend
 import matplotlib.pyplot as plt
+import seaborn as sns  # For heatmap
 from wordcloud import WordCloud
 from collections import Counter
+import numpy as np
+import pandas as pd
 from Functions.advanced import Advanced
 from Functions.basic import Basic
+from Functions.Sentiment_analysis import Sentiment  # Import Sentiment class
 
 class TextVisualization:
     """
-    Class for text visualization functions including word clouds and frequency plots.
+    Class for text visualization functions including word clouds, frequency plots, sentiment distribution, and TF-IDF heatmaps.
     """
     
     def __init__(self, input_data, document_name="default"):
@@ -18,6 +22,7 @@ class TextVisualization:
         """
         self.advanced = Advanced(input_data)
         self.basic = Basic(input_data)
+        self.sentiment = Sentiment(input_data)  # Initialize Sentiment Analysis
         
         # Preprocessing
         self.text = self.advanced.convert_to_lowercase()
@@ -30,55 +35,51 @@ class TextVisualization:
         # Define output directories
         self.wordcloud_folder = "wordclouds"
         self.freqplot_folder = "frequency_plots"
+        self.sentiment_folder = "sentiment_graphs"
+        self.tfidf_folder = "tfidf_heatmaps"
         
         os.makedirs(os.path.join(self.wordcloud_folder, self.document_name), exist_ok=True)
         os.makedirs(os.path.join(self.freqplot_folder, self.document_name), exist_ok=True)
+        os.makedirs(os.path.join(self.sentiment_folder, self.document_name), exist_ok=True)
+        os.makedirs(os.path.join(self.tfidf_folder, self.document_name), exist_ok=True)
     
-    def generate_word_cloud(self, width=800, height=400, background_color='white',
-                            max_words=100, colormap='viridis'):
-        """Generate and save a word cloud as a JPEG file."""
-        if not self.filtered_tokens:
-            raise ValueError("No valid text available for visualization")
+    def generate_sentiment_analysis_graph(self):
+        """Generate and save a sentiment analysis distribution graph."""
+        sentiment_results = self.sentiment.analyze()
         
-        text = ' '.join(self.filtered_tokens)
-        wordcloud = WordCloud(
-            width=width,
-            height=height,
-            background_color=background_color,
-            max_words=max_words,
-            colormap=colormap,
-            contour_width=1,
-            contour_color='steelblue'
-        ).generate(text)
+        plt.figure(figsize=(8, 5))
+        plt.bar(sentiment_results.keys(), sentiment_results.values(), color=['green', 'red', 'gray'])
+        plt.xlabel("Sentiment")
+        plt.ylabel("Score")
+        plt.title("Sentiment Analysis Distribution")
         
-        output_path = os.path.join(self.wordcloud_folder, self.document_name, "wc.jpeg")
-        wordcloud.to_file(output_path)
-        print(f"Word cloud saved to {output_path}")
-        
-        plt.figure(figsize=(10, 5))
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis('off')
-        plt.show()
-    
-    def generate_word_frequency_plot(self, top_n=20):
-        """Generate and save a word frequency plot as a JPEG file."""
-        if not self.filtered_tokens:
-            raise ValueError("No valid text available for visualization")
-        
-        word_counts = Counter(self.filtered_tokens)
-        top_words = word_counts.most_common(top_n)
-        words, frequencies = zip(*top_words)
-        
-        plt.figure(figsize=(12, 6))
-        plt.bar(words, frequencies, color='skyblue')
-        plt.xticks(rotation=45, ha='right')
-        plt.xlabel('Words')
-        plt.ylabel('Frequency')
-        plt.title(f'Top {top_n} Word Frequencies')
-        plt.tight_layout()
-        
-        output_path = os.path.join(self.freqplot_folder, self.document_name, "freq_plot.jpeg")
+        output_path = os.path.join(self.sentiment_folder, self.document_name, "sentiment_analysis.jpeg")
         plt.savefig(output_path, bbox_inches='tight')
-        print(f"Frequency plot saved to {output_path}")
+        print(f"Sentiment analysis graph saved to {output_path}")
         
         plt.show()
+    
+    def process(self, choice):
+        """Process user selection."""
+        print(f"Debug: Received choice -> {choice} (Type: {type(choice)})")  # Debug print
+        
+        try:
+            choice = int(choice)  # Ensure it's an integer
+        except ValueError:
+            raise ValueError(f"Invalid selection: {choice} (not an integer)")
+        
+        if choice == 1:
+            return self.generate_word_cloud()
+        elif choice == 2:
+            return self.generate_word_frequency_plot()
+        elif choice == 3:
+            return self.generate_sentiment_distribution()
+        elif choice == 4:
+            return self.generate_tfidf_heatmap()
+        elif choice == 5:
+            return self.generate_sentiment_analysis_graph()
+        elif choice == 6:
+            print("Returning to main menu...")
+            return None
+        else:
+            raise ValueError(f"Invalid selection: {choice}")
