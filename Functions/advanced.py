@@ -1,16 +1,23 @@
+import sys
+import os
 import re
 import string
+import pandas as pd
+from textblob import TextBlob
+from langdetect import detect  # Language detection
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
-from textblob import TextBlob
-import pandas as pd
-from Functions.basic import Basic  # Import the Basic class
-from langdetect import detect  # Language detection
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.text_rank import TextRankSummarizer
+
+# 🔹 Dynamically add 'Functions/' to Python's path (Same as basic_service.py)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+
+# ✅ Now import `Basic` AFTER modifying sys.path (Same as Basic in basic_service.py)
+from basic import Basic  # Import Basic from Functions/basic.py
 
 
 class Advanced:
