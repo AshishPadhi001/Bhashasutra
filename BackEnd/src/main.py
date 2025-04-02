@@ -1,11 +1,15 @@
+#Main.py
+
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from src.api.endpoints import bot
 from src.core.config import get_settings
 from src.database.database import engine, Base
-from src.api.endpoints import users, health, basic, advanced, sentiment, visualization, auth,bot
+from src.api.endpoints import users, health, basic, advanced, sentiment, visualization, auth
 from src.utils.logger import logger
+from src.middleware.cors import setup_cors  # Import CORS middleware
+from src.middleware.throttling import ThrottleMiddleware  # Import Throttling middleware
+from src.middleware.rate_limiting import RateLimitMiddleware # Import Rate limiting middleware
 import os
 
 # Create the database tables
@@ -21,14 +25,14 @@ app = FastAPI(
     version=settings.api_version
 )
 
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins (for production, specify frontend domains)
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
+# Apply CORS middleware
+setup_cors(app)
+
+# Apply Throttling middleware
+app.add_middleware(ThrottleMiddleware)
+
+# Apply Rate Limiting middleware
+app.add_middleware(RateLimitMiddleware)
 
 # Ensure visualization directories exist
 viz_dirs = [
