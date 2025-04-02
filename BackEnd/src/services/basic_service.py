@@ -15,23 +15,24 @@ def process_text_function(text: str, function: str) -> str:
     basic_instance = Basic(text)
 
     function_mapping = {
-        "count_words": lambda: str(basic_instance.count_words()),  # Convert to string
-        "count_punctuation": lambda: str(basic_instance.count_punctuation()),
-        "most_repeated_word": lambda: str(basic_instance.show_most_repeated_word()),
-        "least_repeated_word": lambda: str(basic_instance.show_least_repeated_word()),
-        "to_lower": lambda: str(basic_instance.convert_to_lowercase()),
-        "to_upper": lambda: str(basic_instance.convert_to_uppercase()),
-        "remove_punctuation": lambda: str(basic_instance.remove_punctuation()),
-        "remove_numbers": lambda: str(basic_instance.remove_numbers()),
-        "remove_extra_whitespace": lambda: str(basic_instance.remove_extra_whitespace()),
-        "find_average_word_length": lambda: str(basic_instance.find_average_word_length()),
-        "find_average_sentence_length": lambda: str(basic_instance.find_average_sentence_length()),
-        "reverse_text": lambda: str(basic_instance.reverse_text()),
-        "count_unique_words": lambda: str(basic_instance.count_unique_words()),
-        "extract_proper_nouns": lambda: str(basic_instance.extract_proper_nouns()),
+        "count_words": lambda: f"The text contains {basic_instance.count_words()} words.",
+        "count_punctuation": lambda: f"The text contains {basic_instance.count_punctuation()} punctuation marks.",
+        "most_repeated_word": lambda: f"The most repeated word is '{basic_instance.show_most_repeated_word()[0]}' which appears {basic_instance.show_most_repeated_word()[1]} times.",
+        "least_repeated_word": lambda: f"The least repeated word is '{basic_instance.show_least_repeated_word()[0]}' which appears {basic_instance.show_least_repeated_word()[1]} times.",
+        "to_lower": lambda: f"Text converted to lowercase: \"{basic_instance.convert_to_lowercase()}\"",
+        "to_upper": lambda: f"Text converted to uppercase: \"{basic_instance.convert_to_uppercase()}\"",
+        "remove_punctuation": lambda: f"Text with punctuation removed: \"{basic_instance.remove_punctuation()}\"",
+        "remove_numbers": lambda: f"Text with numbers removed: \"{basic_instance.remove_numbers()}\"",
+        "remove_extra_whitespace": lambda: f"Text with extra whitespace removed: \"{basic_instance.remove_extra_whitespace()}\"",
+        "find_average_word_length": lambda: f"The average word length is {basic_instance.find_average_word_length():.2f} characters.",
+        "find_average_sentence_length": lambda: f"The average sentence length is {basic_instance.find_average_sentence_length():.2f} words.",
+        "reverse_text": lambda: f"Reversed text: \"{basic_instance.reverse_text()}\"",
+        "count_unique_words": lambda: f"The text contains {basic_instance.count_unique_words()} unique words.",
+        "extract_proper_nouns": lambda: f"Found {len(basic_instance.extract_proper_nouns())} potential proper nouns: {', '.join(basic_instance.extract_proper_nouns())}" if basic_instance.extract_proper_nouns() else "No proper nouns found in the text.",
     }
 
-    return function_mapping.get(function, lambda: "Invalid function")()
+    result = function_mapping.get(function, lambda: "Invalid function")()
+    return result
 
 
 ### 📌 FUNCTION TO PROCESS FILE UPLOAD ###

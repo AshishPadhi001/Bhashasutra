@@ -134,7 +134,11 @@ class Basic:
         """
         words = re.findall(r'\b\w+\b', self.text)
         counter = Counter(words)
-        return counter.most_common(1)[0] if counter else ("None", 0)
+        if not counter:
+            return ("None", 0)
+        
+        most_common = counter.most_common(1)[0]
+        return most_common  # Return (word, count) tuple
 
     def show_least_repeated_word(self):
         """
@@ -208,8 +212,14 @@ class Basic:
         Returns:
             float: Average word length or 0 if no words found.
         """
-        words = re.findall(r'\b\w+\b', self.text)
-        return sum(len(word) for word in words) / len(words) if words else 0
+        words = re.findall(r'\b\w+\b', self.text)  # Extract words without punctuation
+        if not words:
+            return 0.0  # Avoid division by zero
+        
+        total_length = sum(len(word) for word in words)
+        avg_length = total_length / len(words)
+        return round(avg_length, 2)  # Rounded for better readability
+
 
     def find_average_sentence_length(self):
         """
@@ -220,7 +230,12 @@ class Basic:
         """
         sentences = re.split(r'[.!?]', self.text)
         sentences = [s.strip() for s in sentences if s.strip()]
-        return sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+        
+        if not sentences:
+            return 0
+            
+        avg_length = sum(len(s.split()) for s in sentences) / len(sentences)
+        return avg_length
     
     def replace_word(self, old_word, new_word):
         """

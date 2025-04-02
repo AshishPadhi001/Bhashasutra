@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 ### TEXT SENTIMENT ANALYSIS ###
-@router.post("/analyze", response_model=SentimentTextResponse, tags=["Sentiment Analysis"])
+@router.post("/analyze/text", response_model=SentimentTextResponse, tags=["Sentiment Analysis"])
 async def analyze_text(request: SentimentTextRequest):
     """
     Perform sentiment analysis on raw text.
@@ -25,7 +25,7 @@ async def analyze_text(request: SentimentTextRequest):
         logger.error(f"Error in sentiment analysis: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/detailed-analysis", response_model=SentimentTextResponse, tags=["Sentiment Analysis"])
+@router.post("/detailed-analysis/text", response_model=SentimentTextResponse, tags=["Sentiment Analysis"])
 async def detailed_analysis_text(request: SentimentTextRequest):
     """
     Perform a detailed sentiment analysis on raw text.

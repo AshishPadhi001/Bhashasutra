@@ -22,7 +22,7 @@ class UserInDB(UserBase):
     updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class User(UserInDB):
     pass
@@ -30,6 +30,8 @@ class User(UserInDB):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    username: str
+    email: EmailStr
 
 class TokenData(BaseModel):
     username: Optional[str] = None

@@ -169,7 +169,7 @@ async def sentence_tokenizer_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "sentence_tokenizer")
         logger.debug("Sentence tokenization of file completed successfully")
         return {"result": result}
-    except Exception as e:
+    except Exception as e:      
         logger.error(f"Error in sentence_tokenizer_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
 

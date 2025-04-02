@@ -1,4 +1,3 @@
-# Basic NLP API
 from fastapi import APIRouter, UploadFile, File, HTTPException, status
 from src.schemas.basic import BasicTextRequest, BasicFileResponse, BasicTextResponse
 from src.services.basic_service import process_text_function, process_file_function
@@ -16,7 +15,7 @@ async def welcome():
     return {"message": "Welcome to the Bhashasutra API! 🎉"}
 
 ### 📌 TEXT PROCESSING ENDPOINTS ###
-@router.post("/text/count-words", response_model=BasicTextResponse)
+@router.post("/basic/count-words/text", response_model=BasicTextResponse)
 async def count_words_text(request: BasicTextRequest):
     """ Count words from raw text """
     try:
@@ -37,7 +36,7 @@ async def count_words_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/count-punctuation", response_model=BasicTextResponse)
+@router.post("/basic/count-punctuation/text", response_model=BasicTextResponse)
 async def count_punctuation_text(request: BasicTextRequest):
     """ Count punctuation marks from raw text """
     try:
@@ -58,7 +57,7 @@ async def count_punctuation_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/most-repeated-word", response_model=BasicTextResponse)
+@router.post("/basic/most-repeated-word/text", response_model=BasicTextResponse)
 async def most_repeated_word_text(request: BasicTextRequest):
     """ Find the most repeated word from raw text """
     try:
@@ -79,7 +78,7 @@ async def most_repeated_word_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/least-repeated-word", response_model=BasicTextResponse)
+@router.post("/basic/least-repeated-word/text", response_model=BasicTextResponse)
 async def least_repeated_word_text(request: BasicTextRequest):
     """ Find the least repeated word from raw text """
     try:
@@ -100,7 +99,7 @@ async def least_repeated_word_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/to-lowercase", response_model=BasicTextResponse)
+@router.post("/basic/to-lowercase/text", response_model=BasicTextResponse)
 async def to_lowercase_text(request: BasicTextRequest):
     """ Convert text to lowercase """
     try:
@@ -121,7 +120,7 @@ async def to_lowercase_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/to-uppercase", response_model=BasicTextResponse)
+@router.post("/basic/to-uppercase/text", response_model=BasicTextResponse)
 async def to_uppercase_text(request: BasicTextRequest):
     """ Convert text to uppercase """
     try:
@@ -142,7 +141,7 @@ async def to_uppercase_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/remove-punctuation", response_model=BasicTextResponse)
+@router.post("/basic/remove-punctuation/text", response_model=BasicTextResponse)
 async def remove_punctuation_text(request: BasicTextRequest):
     """ Remove punctuation from raw text """
     try:
@@ -163,7 +162,7 @@ async def remove_punctuation_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/remove-numbers", response_model=BasicTextResponse)
+@router.post("/basic/remove-numbers/text", response_model=BasicTextResponse)
 async def remove_numbers_text(request: BasicTextRequest):
     """ Remove numbers from raw text """
     try:
@@ -184,7 +183,7 @@ async def remove_numbers_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/remove-extra-whitespace", response_model=BasicTextResponse)
+@router.post("/basic/remove-extra-whitespace/text", response_model=BasicTextResponse)
 async def remove_extra_whitespace_text(request: BasicTextRequest):
     """ Remove extra whitespace from raw text """
     try:
@@ -205,7 +204,7 @@ async def remove_extra_whitespace_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/average-word-length", response_model=BasicTextResponse)
+@router.post("/basic/average-word-length/text", response_model=BasicTextResponse)
 async def average_word_length_text(request: BasicTextRequest):
     """ Find the average word length from raw text """
     try:
@@ -226,7 +225,7 @@ async def average_word_length_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/average-sentence-length", response_model=BasicTextResponse)
+@router.post("/basic/average-sentence-length/text", response_model=BasicTextResponse)
 async def average_sentence_length_text(request: BasicTextRequest):
     """ Find the average sentence length from raw text """
     try:
@@ -247,7 +246,7 @@ async def average_sentence_length_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/reverse-text", response_model=BasicTextResponse)
+@router.post("/basic/reverse-text/text", response_model=BasicTextResponse)
 async def reverse_text_text(request: BasicTextRequest):
     """ Reverse the text """
     try:
@@ -268,7 +267,7 @@ async def reverse_text_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/count-unique-words", response_model=BasicTextResponse)
+@router.post("/basic/count-unique-words/text", response_model=BasicTextResponse)
 async def count_unique_words_text(request: BasicTextRequest):
     """ Count unique words in text """
     try:
@@ -289,7 +288,7 @@ async def count_unique_words_text(request: BasicTextRequest):
             detail=f"Failed to process text: {str(e)}"
         )
 
-@router.post("/text/extract-proper-nouns", response_model=BasicTextResponse)
+@router.post("/basic/extract-proper-nouns/text", response_model=BasicTextResponse)
 async def extract_proper_nouns_text(request: BasicTextRequest):
     """ Extract proper nouns from text """
     try:
@@ -311,7 +310,7 @@ async def extract_proper_nouns_text(request: BasicTextRequest):
         )
 
 ### 📌 FILE PROCESSING ENDPOINTS ###
-@router.post("/file/count-words", response_model=BasicFileResponse)
+@router.post("/basic/count-words/file", response_model=BasicFileResponse)
 async def count_words_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing count_words request for file: {file.filename}")
@@ -334,7 +333,7 @@ async def count_words_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/count-punctuation", response_model=BasicFileResponse)
+@router.post("/basic/count-punctuation/file", response_model=BasicFileResponse)
 async def count_punctuation_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing count_punctuation request for file: {file.filename}")
@@ -356,7 +355,7 @@ async def count_punctuation_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/most-repeated-word", response_model=BasicFileResponse)
+@router.post("/basic/most-repeated-word/file", response_model=BasicFileResponse)
 async def most_repeated_word_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing most_repeated_word request for file: {file.filename}")
@@ -378,7 +377,7 @@ async def most_repeated_word_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/least-repeated-word", response_model=BasicFileResponse)
+@router.post("/basic/least-repeated-word/file", response_model=BasicFileResponse)
 async def least_repeated_word_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing least_repeated_word request for file: {file.filename}")
@@ -400,7 +399,7 @@ async def least_repeated_word_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/to-lowercase", response_model=BasicFileResponse)
+@router.post("/basic/to-lowercase/file", response_model=BasicFileResponse)
 async def to_lowercase_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing to_lowercase request for file: {file.filename}")
@@ -422,7 +421,7 @@ async def to_lowercase_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/to-uppercase", response_model=BasicFileResponse)
+@router.post("/basic/to-uppercase/file", response_model=BasicFileResponse)
 async def to_uppercase_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing to_uppercase request for file: {file.filename}")
@@ -444,7 +443,7 @@ async def to_uppercase_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/remove-punctuation", response_model=BasicFileResponse)
+@router.post("/basic/remove-punctuation/file", response_model=BasicFileResponse)
 async def remove_punctuation_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing remove_punctuation request for file: {file.filename}")
@@ -466,7 +465,7 @@ async def remove_punctuation_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/remove-numbers", response_model=BasicFileResponse)
+@router.post("/basic/remove-numbers/file", response_model=BasicFileResponse)
 async def remove_numbers_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing remove_numbers request for file: {file.filename}")
@@ -488,7 +487,7 @@ async def remove_numbers_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/remove-extra-whitespace", response_model=BasicFileResponse)
+@router.post("/basic/remove-extra-whitespace/file", response_model=BasicFileResponse)
 async def remove_extra_whitespace_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing remove_extra_whitespace request for file: {file.filename}")
@@ -510,7 +509,7 @@ async def remove_extra_whitespace_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/average-word-length", response_model=BasicFileResponse)
+@router.post("/basic/average-word-length/file", response_model=BasicFileResponse)
 async def average_word_length_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing average_word_length request for file: {file.filename}")
@@ -532,7 +531,7 @@ async def average_word_length_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/average-sentence-length", response_model=BasicFileResponse)
+@router.post("/basic/average-sentence-length/file", response_model=BasicFileResponse)
 async def average_sentence_length_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing average_sentence_length request for file: {file.filename}")
@@ -554,7 +553,7 @@ async def average_sentence_length_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/reverse-text", response_model=BasicFileResponse)
+@router.post("/basic/reverse-text/file", response_model=BasicFileResponse)
 async def reverse_text_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing reverse_text request for file: {file.filename}")
@@ -576,7 +575,7 @@ async def reverse_text_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/count-unique-words", response_model=BasicFileResponse)
+@router.post("/basic/count-unique-words/file", response_model=BasicFileResponse)
 async def count_unique_words_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing count_unique_words request for file: {file.filename}")
@@ -598,7 +597,7 @@ async def count_unique_words_file(file: UploadFile = File(...)):
             detail=f"Failed to process file: {str(e)}"
         )
 
-@router.post("/file/extract-proper-nouns", response_model=BasicFileResponse)
+@router.post("/basic/extract-proper-nouns/file", response_model=BasicFileResponse)
 async def extract_proper_nouns_file(file: UploadFile = File(...)):
     try:
         logger.info(f"Processing extract_proper_nouns request for file: {file.filename}")

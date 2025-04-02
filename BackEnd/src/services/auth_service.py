@@ -1,3 +1,4 @@
+
 # src/services/auth_service.py
 from datetime import timedelta
 from sqlalchemy.orm import Session
@@ -31,12 +32,12 @@ def create_user(db: Session, user: UserCreate):
     try:
         # Check if username or email already exists
         if get_user_by_username(db, user.username):
-            raise HTTPException(status_code=400, detail="Username already registered")
+            raise HTTPException(status_code=409, detail="Username already exists. Please log in.")
         if get_user_by_email(db, user.email):
-            raise HTTPException(status_code=400, detail="Email already registered")
-            
+            raise HTTPException(status_code=409, detail="Email already exists. Please log in.")
+
         hashed_password = get_password_hash(user.password)
-        db_user = User(
+        db_user = User(  # Make sure this is the ORM model from src.models.user
             email=user.email,
             username=user.username,
             hashed_password=hashed_password
@@ -44,11 +45,12 @@ def create_user(db: Session, user: UserCreate):
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        return db_user
+        return db_user  # Ensure returning ORM model, not Pydantic schema
     except Exception as e:
         logger.error(f"Error creating user: {str(e)}")
         db.rollback()
-        raise
+        raise HTTPException(status_code=500, detail="An error occurred during signup")
+    
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
