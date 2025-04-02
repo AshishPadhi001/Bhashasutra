@@ -24,7 +24,7 @@ def process_text_function(text: str, function: str) -> str:
         "remove_punctuation": lambda: f"Text with punctuation removed: \"{basic_instance.remove_punctuation()}\"",
         "remove_numbers": lambda: f"Text with numbers removed: \"{basic_instance.remove_numbers()}\"",
         "remove_extra_whitespace": lambda: f"Text with extra whitespace removed: \"{basic_instance.remove_extra_whitespace()}\"",
-        "find_average_word_length": lambda: f"The average word length is {basic_instance.find_average_word_length():.2f} characters.",
+       "find_average_word_length": lambda: f"The average word length is {basic_instance.find_average_word_length():.2f} characters.",
         "find_average_sentence_length": lambda: f"The average sentence length is {basic_instance.find_average_sentence_length():.2f} words.",
         "reverse_text": lambda: f"Reversed text: \"{basic_instance.reverse_text()}\"",
         "count_unique_words": lambda: f"The text contains {basic_instance.count_unique_words()} unique words.",

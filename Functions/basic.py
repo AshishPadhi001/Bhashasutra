@@ -204,21 +204,27 @@ class Basic:
             str: Text with normalized whitespace.
         """
         return re.sub(r'\s+', ' ', self.text).strip()
-    
+
     def find_average_word_length(self):
         """
-        Calculate the average length of words in the text.
+        Calculate the average length of words in the given text.
         
+        Args:
+            text (str): Input text.
+
         Returns:
             float: Average word length or 0 if no words found.
         """
-        words = re.findall(r'\b\w+\b', self.text)  # Extract words without punctuation
+        words = re.findall(r'\w+', self.text)  # Extract words (ignoring punctuation)
+        
         if not words:
             return 0.0  # Avoid division by zero
         
         total_length = sum(len(word) for word in words)
         avg_length = total_length / len(words)
+        
         return round(avg_length, 2)  # Rounded for better readability
+
 
 
     def find_average_sentence_length(self):

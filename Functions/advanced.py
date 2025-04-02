@@ -182,10 +182,92 @@ class Advanced:
         Detect the language of the text.
         
         Returns:
-            str: ISO language code (e.g., 'en' for English) or error message
+            str: Full language name (e.g., 'English' instead of 'en') or error message
         """
         try:
-            return detect(self.text)
+            # Get the ISO language code
+            lang_code = detect(self.text)
+            
+            # Map of ISO codes to full language names
+            # Expanded map of ISO codes to full language names (includes all languages detected by langdetect)
+            language_map = {
+                'af': 'Afrikaans',
+                'ar': 'Arabic',
+                'bg': 'Bulgarian',
+                'bn': 'Bengali',
+                'ca': 'Catalan',
+                'cs': 'Czech',
+                'cy': 'Welsh',
+                'da': 'Danish',
+                'de': 'German',
+                'el': 'Greek',
+                'en': 'English',
+                'es': 'Spanish',
+                'et': 'Estonian',
+                'fa': 'Persian',
+                'fi': 'Finnish',
+                'fr': 'French',
+                'gu': 'Gujarati',
+                'he': 'Hebrew',
+                'hi': 'Hindi',
+                'hr': 'Croatian',
+                'hu': 'Hungarian',
+                'id': 'Indonesian',
+                'it': 'Italian',
+                'ja': 'Japanese',
+                'kn': 'Kannada',
+                'ko': 'Korean',
+                'lt': 'Lithuanian',
+                'lv': 'Latvian',
+                'mk': 'Macedonian',
+                'ml': 'Malayalam',
+                'mr': 'Marathi',
+                'ne': 'Nepali',
+                'nl': 'Dutch',
+                'no': 'Norwegian',
+                'pa': 'Punjabi',
+                'pl': 'Polish',
+                'pt': 'Portuguese',
+                'ro': 'Romanian',
+                'ru': 'Russian',
+                'sk': 'Slovak',
+                'sl': 'Slovenian',
+                'so': 'Somali',
+                'sq': 'Albanian',
+                'sv': 'Swedish',
+                'sw': 'Swahili',
+                'ta': 'Tamil',
+                'te': 'Telugu',
+                'th': 'Thai',
+                'tl': 'Tagalog',
+                'tr': 'Turkish',
+                'uk': 'Ukrainian',
+                'ur': 'Urdu',
+                'vi': 'Vietnamese',
+                'zh-cn': 'Chinese (Simplified)',
+                'zh-tw': 'Chinese (Traditional)',
+
+                # Additional languages detected by langdetect
+                'az': 'Azerbaijani',
+                'be': 'Belarusian',
+                'bs': 'Bosnian',
+                'eo': 'Esperanto',
+                'gl': 'Galician',
+                'ka': 'Georgian',
+                'kk': 'Kazakh',
+                'mg': 'Malagasy',
+                'mn': 'Mongolian',
+                'mt': 'Maltese',
+                'si': 'Sinhala',
+                'sr': 'Serbian',
+                'xh': 'Xhosa',
+                'yi': 'Yiddish',
+                'zu': 'Zulu'
+            }
+
+            
+            # Return full language name or code if not in map
+            return language_map.get(lang_code, f"Unknown language code: {lang_code}")
         except:
             return "Could not detect language."
 
