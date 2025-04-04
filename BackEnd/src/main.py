@@ -45,6 +45,14 @@ app.add_middleware(ThrottleMiddleware)
 # Apply Rate Limiting middleware
 app.add_middleware(RateLimitMiddleware)
 
+# Mount the visualizations directory for static file serving
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+visualizations_dir = os.path.join(root_dir, "visualizations")
+os.makedirs(visualizations_dir, exist_ok=True)
+app.mount(
+    "/visualizations", StaticFiles(directory=visualizations_dir), name="visualizations"
+)
+
 # Include routers
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/users", tags=["Users"])

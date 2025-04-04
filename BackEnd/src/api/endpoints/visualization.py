@@ -63,10 +63,10 @@ async def create_frequency_plot(file: UploadFile = File(...)):
     )
 
 
-@router.post("/sentiment-distribution/file", response_model=VisualizationResponse)
+@router.post("/sentiment-graphs/file", response_model=VisualizationResponse)
 async def create_sentiment_distribution(file: UploadFile = File(...)):
     """
-    Upload a file and generate a sentiment distribution visualization
+    Upload a file and generate a sentiment graphs visualization
     """
     await validate_file(file)
 
