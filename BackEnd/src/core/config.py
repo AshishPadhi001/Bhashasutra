@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings
 from pydantic import Field
+import os
+from typing import Optional
+
 
 class Settings(BaseSettings):
     # API Configurations
@@ -15,16 +18,17 @@ class Settings(BaseSettings):
     # Database settings
     DATABASE_URL: str = Field(..., env="DATABASE_URL")
 
-    # Hugging Face API settings
-    huggingface_api_key: str = Field("", env="HUGGINGFACE_API_KEY")
-    huggingface_model_id: str = Field("gpt2", env="HUGGINGFACE_MODEL_ID")
+    # EGmini Api Key
+    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
 
     class Config:
         env_file = "E:\Bhashasutra\BackEnd\src\.env"
         env_file_encoding = "utf-8"
 
+
 # Initialize settings instance
 settings = Settings()
+
 
 # Dependency Injection Function
 def get_settings() -> Settings:

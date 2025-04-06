@@ -12,6 +12,7 @@ from src.api.endpoints import (
     visualization,
     auth,
     summarizer,
+    bhasha_bot,
 )
 
 from src.utils.logger import logger
@@ -60,6 +61,7 @@ app.include_router(advanced.router)
 app.include_router(sentiment.router)
 app.include_router(visualization.router)
 app.include_router(summarizer.router)
+app.include_router(bhasha_bot.router)
 
 
 # Root endpoint
