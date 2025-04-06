@@ -4,7 +4,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from src.schemas.visualization import VisualizationResponse
 from src.services.visualization_service import VisualizationService
 
-router = APIRouter()
+router = APIRouter(prefix="/visualization", tags=["visualization"])
 
 
 async def validate_file(file: UploadFile):

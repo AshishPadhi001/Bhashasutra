@@ -2,17 +2,16 @@
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from src.api.endpoints import bot
 from src.core.config import get_settings
 from src.database.database import engine, Base
 from src.api.endpoints import (
     users,
-    health,
     basic,
     advanced,
     sentiment,
     visualization,
     auth,
+    summarizer,
 )
 
 from src.utils.logger import logger
@@ -54,15 +53,13 @@ app.mount(
 )
 
 # Include routers
-app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(basic.router, tags=["Basic NLP"])
-app.include_router(advanced.router, prefix="/advanced", tags=["Advanced NLP"])
-app.include_router(sentiment.router, prefix="/sentiment", tags=["Sentiment Analysis"])
-app.include_router(
-    visualization.router, prefix="/visualization", tags=["visualization"]
-)
-app.include_router(bot.router, tags=["Bot"])
+app.include_router(auth.router)
+app.include_router(users.router)
+app.include_router(basic.router)
+app.include_router(advanced.router)
+app.include_router(sentiment.router)
+app.include_router(visualization.router)
+app.include_router(summarizer.router)
 
 
 # Root endpoint
