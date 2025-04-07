@@ -5,8 +5,6 @@ import asyncio
 
 logger = logging.getLogger("bhasha_bot")
 
-print(settings.GEMINI_API_KEY)
-
 
 class BhashaBotService:
     """
