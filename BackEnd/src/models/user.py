@@ -2,7 +2,8 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.sql.sqltypes import DateTime
 from sqlalchemy.sql import func
-from src.database.database import Base
+from BackEnd.src.database.database import Base
+
 
 class User(Base):
     __tablename__ = "users"

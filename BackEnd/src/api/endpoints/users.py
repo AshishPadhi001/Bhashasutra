@@ -1,13 +1,12 @@
-# src/api/endpoints/users.py
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.database.database import get_db
-from src.models.user import User as UserModel
-from src.schemas.user import User, UserUpdate
-from src.services.auth_service import get_current_active_user
-from src.core.security import get_password_hash
-from src.utils.logger import logger
+from BackEnd.src.database.database import get_db
+from BackEnd.src.models.user import User as UserModel
+from BackEnd.src.schemas.user import User, UserUpdate
+from BackEnd.src.services.auth_service import get_current_active_user
+from BackEnd.src.core.security import get_password_hash
+from BackEnd.src.utils.logger import logger
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -17,7 +16,16 @@ def read_users_me(current_user: UserModel = Depends(get_current_active_user)):
     """
     Get the current logged-in user information
     """
-    return current_user
+    try:
+        return current_user
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
 
 
 @router.put("/me", response_model=User)
@@ -43,6 +51,14 @@ def update_user(
         db.commit()
         db.refresh(current_user)
         return current_user
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error updating user: {str(e)}")
         db.rollback()
@@ -63,6 +79,14 @@ def delete_user(
     try:
         db.delete(current_user)
         db.commit()
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error deleting user: {str(e)}")
         db.rollback()

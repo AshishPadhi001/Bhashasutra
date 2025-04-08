@@ -1,6 +1,9 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
-from src.schemas.advanced import TextRequest, FileRequest, ProcessResponse
-from src.services.advanced_service import process_text_function, process_file_function
+from BackEnd.src.schemas.advanced import TextRequest, FileRequest, ProcessResponse
+from BackEnd.src.services.advanced_service import (
+    process_text_function,
+    process_file_function,
+)
 import logging
 from typing import Dict, Any
 
@@ -20,6 +23,14 @@ async def word_tokenizer_text(request: TextRequest):
         result = process_text_function(request.text, "word_tokenizer")
         logger.debug("Word tokenization completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in word_tokenizer_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -34,6 +45,14 @@ async def sentence_tokenizer_text(request: TextRequest):
         result = process_text_function(request.text, "sentence_tokenizer")
         logger.debug("Sentence tokenization completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in sentence_tokenizer_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -48,6 +67,14 @@ async def remove_stopwords_text(request: TextRequest):
         result = process_text_function(request.text, "remove_stopwords")
         logger.debug("Stopwords removal completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in remove_stopwords_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -62,6 +89,14 @@ async def perform_stemming_text(request: TextRequest):
         result = process_text_function(request.text, "perform_stemming")
         logger.debug("Stemming completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in perform_stemming_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -76,6 +111,14 @@ async def perform_lemmatization_text(request: TextRequest):
         result = process_text_function(request.text, "perform_lemmatization")
         logger.debug("Lemmatization completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in perform_lemmatization_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -94,6 +137,14 @@ async def pos_tagging_text(request: TextRequest):
 
         logger.debug("POS tagging completed successfully")
         return {"result": formatted_result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in pos_tagging_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -115,26 +166,16 @@ async def tfidf_vectorization_text(request: TextRequest):
 
         logger.debug("TF-IDF vectorization completed successfully")
         return {"result": formatted_result}  # Ensure this returns a list
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in tfidf_vectorization_text: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
-
-
-@router.post("/text_summarization/text", response_model=ProcessResponse)
-async def text_summarization_text(request: TextRequest):
-    try:
-        logger.info(
-            f"Processing text with text_summarization, text length: {len(request.text)}"
-        )
-        result = process_text_function(request.text, "text_summarization")
-
-        # Convert result to a list (FastAPI expects a list in ProcessResponse)
-        formatted_result = [result]  # ✅ Wrap string in a list
-
-        logger.debug("Text summarization completed successfully")
-        return {"result": formatted_result}  # ✅ Ensure it returns a list
-    except Exception as e:
-        logger.error(f"Error in text_summarization_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
 
 
@@ -151,6 +192,14 @@ async def language_detection_text(request: TextRequest):
 
         logger.debug("Language detection completed successfully")
         return {"result": formatted_result}  # ✅ Ensure it returns a list
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in language_detection_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -169,6 +218,14 @@ async def spell_check_and_grammar_text(request: TextRequest):
 
         logger.debug("Spell check and grammar completed successfully")
         return {"result": formatted_result}  # ✅ Ensure it returns a list
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in spell_check_and_grammar_text: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
@@ -182,6 +239,14 @@ async def word_tokenizer_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "word_tokenizer")
         logger.debug("Word tokenization of file completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in word_tokenizer_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -196,6 +261,14 @@ async def sentence_tokenizer_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "sentence_tokenizer")
         logger.debug("Sentence tokenization of file completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in sentence_tokenizer_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -208,6 +281,14 @@ async def remove_stopwords_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "remove_stopwords")
         logger.debug("Stopwords removal from file completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in remove_stopwords_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -220,6 +301,14 @@ async def perform_stemming_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "perform_stemming")
         logger.debug("Stemming of file completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in perform_stemming_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -234,6 +323,14 @@ async def perform_lemmatization_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "perform_lemmatization")
         logger.debug("Lemmatization of file completed successfully")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in perform_lemmatization_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -250,6 +347,14 @@ async def pos_tagging_file(file: UploadFile = File(...)):
 
         logger.debug("POS tagging of file completed successfully")
         return {"result": formatted_result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in pos_tagging_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -271,26 +376,16 @@ async def tfidf_vectorization_file(file: UploadFile = File(...)):
 
         logger.debug("TF-IDF vectorization of file completed successfully")
         return {"result": formatted_result}  # Ensure this returns a list
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in tfidf_vectorization_file: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
-
-
-@router.post("/text_summarization/file", response_model=ProcessResponse)
-async def text_summarization_file(file: UploadFile = File(...)):
-    try:
-        logger.info(
-            f"Processing file with text_summarization, filename: {file.filename}"
-        )
-        result = await process_file_function(file, "text_summarization")
-
-        # ✅ Convert string response to a list
-        formatted_result = [result]  # Wrap string in a list
-
-        logger.debug("Text summarization of file completed successfully")
-        return {"result": formatted_result}  # ✅ Ensure it returns a list
-    except Exception as e:
-        logger.error(f"Error in text_summarization_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
 
 
@@ -307,6 +402,14 @@ async def language_detection_file(file: UploadFile = File(...)):
 
         logger.debug("Language detection of file completed successfully")
         return {"result": formatted_result}  # ✅ Ensure it returns a list
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in language_detection_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
@@ -325,6 +428,14 @@ async def spell_check_and_grammar_file(file: UploadFile = File(...)):
 
         logger.debug("Spell check and grammar of file completed successfully")
         return {"result": formatted_result}  # ✅ Ensure it returns a list
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in spell_check_and_grammar_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")

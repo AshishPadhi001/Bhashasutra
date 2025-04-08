@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter, HTTPException
-from src.schemas.sentiment import SentimentTextRequest, SentimentTextResponse
-from src.services.sentiment_service import analyze_text_sentiment
+from BackEnd.src.schemas.sentiment import SentimentTextRequest, SentimentTextResponse
+from BackEnd.src.services.sentiment_service import analyze_text_sentiment
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -24,6 +24,14 @@ async def analyze_text(request: SentimentTextRequest):
         result = analyze_text_sentiment(request.text)
         logger.info("Successfully analyzed sentiment")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in sentiment analysis: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -47,6 +55,14 @@ async def detailed_analysis_text(request: SentimentTextRequest):
         result = analyze_text_sentiment(request.text, detailed=True)
         logger.info("Successfully completed detailed sentiment analysis")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded (detailed analysis)")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in detailed sentiment analysis: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

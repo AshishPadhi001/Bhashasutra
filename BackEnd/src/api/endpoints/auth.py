@@ -1,20 +1,23 @@
 # src/api/endpoints/auth.py
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from src.core.config import settings
-from src.database.database import get_db
-from src.schemas.user import Token, UserCreate, User
-from src.services.auth_service import (
+from BackEnd.src.core.config import settings
+from BackEnd.src.database.database import get_db
+from BackEnd.src.schemas.user import Token, UserCreate, User
+from BackEnd.src.services.auth_service import (
     authenticate_user,
     create_user,
     create_access_token,
     get_current_active_user,
 )
-from src.utils.logger import logger
+from BackEnd.src.services.email_service import EmailService
+from BackEnd.src.utils.logger import logger
+from BackEnd.src.models import user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+email_service = EmailService()
 
 
 def get_user_by_username(db: Session, username: str):
@@ -31,13 +34,50 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
+def send_welcome_email_background(email: str, username: str):
+    """Background task to send welcome email"""
+    email_service.send_welcome_email(email, username)
+
+
 @router.post("/signup", response_model=User, status_code=status.HTTP_201_CREATED)
-def signup(user: UserCreate, db: Session = Depends(get_db)):
+def signup(
+    user: UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)
+):
     """
     Create a new user with the provided username, email, and password.
     """
     try:
+        # Check if username exists
+        existing_username = (
+            db.query(user).filter(user.username == user.username).first()
+        )
+
+        # Check if email exists
+        existing_email = db.query(user).filter(user.email == user.email).first()
+
+        # Handle the different cases
+        if existing_username and existing_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Both username and email already exist",
+            )
+        elif existing_username:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Try any other username"
+            )
+        elif existing_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists"
+            )
+
+        # Create the user if no conflicts exist
         db_user = create_user(db, user)
+
+        # Add email sending as background task
+        background_tasks.add_task(
+            send_welcome_email_background, db_user.email, db_user.username
+        )
+
         return User(  # Ensure response matches Pydantic schema
             id=db_user.id,
             email=db_user.email,
@@ -47,7 +87,13 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
             updated_at=db_user.updated_at,
         )
     except HTTPException as http_exc:
-        raise http_exc
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Signup error: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred during signup")
@@ -79,6 +125,14 @@ def login(
             "username": user.username,
             "email": user.email,
         }
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Login error: {str(e)}")
         raise HTTPException(

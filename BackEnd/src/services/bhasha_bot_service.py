@@ -1,6 +1,6 @@
 import logging
 import google.generativeai as genai
-from src.core.config import settings
+from BackEnd.src.core.config import settings
 import asyncio
 
 logger = logging.getLogger("bhasha_bot")
@@ -16,7 +16,7 @@ class BhashaBotService:
         # Initialize Gemini API
         try:
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            self.model = genai.GenerativeModel("models/gemini-1.5-flash")
+            self.model = genai.GenerativeModel("models/gemini-2.0-flash")
             logger.info("BhashaBotService initialized with Gemini 2.0")
         except Exception as e:
             logger.error(f"Failed to initialize Gemini: {str(e)}")

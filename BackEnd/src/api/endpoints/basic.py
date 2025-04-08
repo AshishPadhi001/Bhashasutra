@@ -1,6 +1,13 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, status
-from src.schemas.basic import BasicTextRequest, BasicFileResponse, BasicTextResponse
-from src.services.basic_service import process_text_function, process_file_function
+from BackEnd.src.schemas.basic import (
+    BasicTextRequest,
+    BasicFileResponse,
+    BasicTextResponse,
+)
+from BackEnd.src.services.basic_service import (
+    process_text_function,
+    process_file_function,
+)
 import logging
 
 # Configure logging
@@ -30,6 +37,14 @@ async def count_words_text(request: BasicTextRequest):
         result = process_text_function(request.text, "count_words")
         logger.info("Successfully processed count_words request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing count_words: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -51,6 +66,14 @@ async def count_punctuation_text(request: BasicTextRequest):
         result = process_text_function(request.text, "count_punctuation")
         logger.info("Successfully processed count_punctuation request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing count_punctuation: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -72,6 +95,14 @@ async def most_repeated_word_text(request: BasicTextRequest):
         result = process_text_function(request.text, "most_repeated_word")
         logger.info("Successfully processed most_repeated_word request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing most_repeated_word: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -93,6 +124,14 @@ async def least_repeated_word_text(request: BasicTextRequest):
         result = process_text_function(request.text, "least_repeated_word")
         logger.info("Successfully processed least_repeated_word request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing least_repeated_word: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -114,6 +153,14 @@ async def to_lowercase_text(request: BasicTextRequest):
         result = process_text_function(request.text, "to_lower")
         logger.info("Successfully processed to_lowercase request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing to_lowercase: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -135,6 +182,14 @@ async def to_uppercase_text(request: BasicTextRequest):
         result = process_text_function(request.text, "to_upper")
         logger.info("Successfully processed to_uppercase request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing to_uppercase: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -156,6 +211,14 @@ async def remove_punctuation_text(request: BasicTextRequest):
         result = process_text_function(request.text, "remove_punctuation")
         logger.info("Successfully processed remove_punctuation request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing remove_punctuation: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -177,6 +240,14 @@ async def remove_numbers_text(request: BasicTextRequest):
         result = process_text_function(request.text, "remove_numbers")
         logger.info("Successfully processed remove_numbers request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing remove_numbers: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -198,6 +269,14 @@ async def remove_extra_whitespace_text(request: BasicTextRequest):
         result = process_text_function(request.text, "remove_extra_whitespace")
         logger.info("Successfully processed remove_extra_whitespace request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing remove_extra_whitespace: {str(e)}", exc_info=True
@@ -221,6 +300,14 @@ async def average_word_length_text(request: BasicTextRequest):
         result = process_text_function(request.text, "find_average_word_length")
         logger.info("Successfully processed average_word_length request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing average_word_length: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -242,6 +329,14 @@ async def average_sentence_length_text(request: BasicTextRequest):
         result = process_text_function(request.text, "find_average_sentence_length")
         logger.info("Successfully processed average_sentence_length request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing average_sentence_length: {str(e)}", exc_info=True
@@ -265,6 +360,14 @@ async def reverse_text_text(request: BasicTextRequest):
         result = process_text_function(request.text, "reverse_text")
         logger.info("Successfully processed reverse_text request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing reverse_text: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -286,6 +389,14 @@ async def count_unique_words_text(request: BasicTextRequest):
         result = process_text_function(request.text, "count_unique_words")
         logger.info("Successfully processed count_unique_words request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing count_unique_words: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -307,6 +418,14 @@ async def extract_proper_nouns_text(request: BasicTextRequest):
         result = process_text_function(request.text, "extract_proper_nouns")
         logger.info("Successfully processed extract_proper_nouns request")
         return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error processing extract_proper_nouns: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -328,9 +447,14 @@ async def count_words_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "count_words")
         logger.info(f"Successfully processed count_words for file: {file.filename}")
         return {"result": result}
-    except HTTPException as he:
-        # Re-raise HTTP exceptions without modifying them
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing count_words for file {file.filename}: {str(e)}",
@@ -356,8 +480,14 @@ async def count_punctuation_file(file: UploadFile = File(...)):
             f"Successfully processed count_punctuation for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing count_punctuation for file {file.filename}: {str(e)}",
@@ -383,8 +513,14 @@ async def most_repeated_word_file(file: UploadFile = File(...)):
             f"Successfully processed most_repeated_word for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing most_repeated_word for file {file.filename}: {str(e)}",
@@ -410,8 +546,14 @@ async def least_repeated_word_file(file: UploadFile = File(...)):
             f"Successfully processed least_repeated_word for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing least_repeated_word for file {file.filename}: {str(e)}",
@@ -435,8 +577,14 @@ async def to_lowercase_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "to_lower")
         logger.info(f"Successfully processed to_lowercase for file: {file.filename}")
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing to_lowercase for file {file.filename}: {str(e)}",
@@ -460,8 +608,14 @@ async def to_uppercase_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "to_upper")
         logger.info(f"Successfully processed to_uppercase for file: {file.filename}")
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing to_uppercase for file {file.filename}: {str(e)}",
@@ -487,8 +641,14 @@ async def remove_punctuation_file(file: UploadFile = File(...)):
             f"Successfully processed remove_punctuation for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing remove_punctuation for file {file.filename}: {str(e)}",
@@ -512,8 +672,14 @@ async def remove_numbers_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "remove_numbers")
         logger.info(f"Successfully processed remove_numbers for file: {file.filename}")
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing remove_numbers for file {file.filename}: {str(e)}",
@@ -541,8 +707,14 @@ async def remove_extra_whitespace_file(file: UploadFile = File(...)):
             f"Successfully processed remove_extra_whitespace for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing remove_extra_whitespace for file {file.filename}: {str(e)}",
@@ -568,8 +740,14 @@ async def average_word_length_file(file: UploadFile = File(...)):
             f"Successfully processed average_word_length for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing average_word_length for file {file.filename}: {str(e)}",
@@ -597,8 +775,14 @@ async def average_sentence_length_file(file: UploadFile = File(...)):
             f"Successfully processed average_sentence_length for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing average_sentence_length for file {file.filename}: {str(e)}",
@@ -622,8 +806,14 @@ async def reverse_text_file(file: UploadFile = File(...)):
         result = await process_file_function(file, "reverse_text")
         logger.info(f"Successfully processed reverse_text for file: {file.filename}")
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing reverse_text for file {file.filename}: {str(e)}",
@@ -649,8 +839,14 @@ async def count_unique_words_file(file: UploadFile = File(...)):
             f"Successfully processed count_unique_words for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing count_unique_words for file {file.filename}: {str(e)}",
@@ -678,8 +874,14 @@ async def extract_proper_nouns_file(file: UploadFile = File(...)):
             f"Successfully processed extract_proper_nouns for file: {file.filename}"
         )
         return {"result": result}
-    except HTTPException as he:
-        raise he
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(
             f"Error processing extract_proper_nouns for file {file.filename}: {str(e)}",

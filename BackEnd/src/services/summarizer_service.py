@@ -2,7 +2,7 @@ import os
 import tempfile
 from typing import Dict, Any, Optional, BinaryIO
 from Functions.text_summarizer import TextSummarizer
-from src.utils.logger import get_logger
+from BackEnd.src.utils.logger import get_logger
 
 # Set up logger
 logger = get_logger(__name__)

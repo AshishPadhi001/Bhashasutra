@@ -6,9 +6,9 @@ from fastapi import (
 )
 from fastapi.responses import JSONResponse
 import os
-from src.schemas.summarizer import TextSummarizerRequest, SummarizerResponse
-from src.services.summarizer_service import SummarizerService
-from src.utils.logger import get_logger
+from BackEnd.src.schemas.summarizer import TextSummarizerRequest, SummarizerResponse
+from BackEnd.src.services.summarizer_service import SummarizerService
+from BackEnd.src.utils.logger import get_logger
 from typing import Dict
 
 # Set up router
@@ -46,6 +46,14 @@ async def summarize_text_brief(request: TextSummarizerRequest):
 
         # Return simplified response
         return format_summary_response(result)
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in summarize_text_brief endpoint: {str(e)}")
         raise HTTPException(
@@ -66,6 +74,14 @@ async def summarize_text_medium(request: TextSummarizerRequest):
 
         # Return simplified response
         return format_summary_response(result)
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in summarize_text_medium endpoint: {str(e)}")
         raise HTTPException(
@@ -86,6 +102,14 @@ async def summarize_text_detailed(request: TextSummarizerRequest):
 
         # Return simplified response
         return format_summary_response(result)
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in summarize_text_detailed endpoint: {str(e)}")
         raise HTTPException(
@@ -114,6 +138,14 @@ async def summarize_file_brief(file: UploadFile = File(...)):
 
         # Return simplified response
         return format_summary_response(result)
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in summarize_file_brief endpoint: {str(e)}")
         raise HTTPException(
@@ -142,6 +174,14 @@ async def summarize_file_medium(file: UploadFile = File(...)):
 
         # Return simplified response
         return format_summary_response(result)
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in summarize_file_medium endpoint: {str(e)}")
         raise HTTPException(
@@ -170,6 +210,14 @@ async def summarize_file_detailed(file: UploadFile = File(...)):
 
         # Return simplified response
         return format_summary_response(result)
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
     except Exception as e:
         logger.error(f"Error in summarize_file_detailed endpoint: {str(e)}")
         raise HTTPException(

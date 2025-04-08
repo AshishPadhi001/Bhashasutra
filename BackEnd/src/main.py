@@ -2,9 +2,9 @@
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from src.core.config import get_settings
-from src.database.database import engine, Base
-from src.api.endpoints import (
+from BackEnd.src.core.config import get_settings
+from BackEnd.src.database.database import engine, Base
+from BackEnd.src.api.endpoints import (
     users,
     basic,
     advanced,
@@ -15,10 +15,12 @@ from src.api.endpoints import (
     bhasha_bot,
 )
 
-from src.utils.logger import logger
-from src.middleware.cors import setup_cors  # Import CORS middleware
-from src.middleware.throttling import ThrottleMiddleware  # Import Throttling middleware
-from src.middleware.rate_limiting import (
+from BackEnd.src.utils.logger import logger
+from BackEnd.src.middleware.cors import setup_cors  # Import CORS middleware
+from BackEnd.src.middleware.throttling import (
+    ThrottleMiddleware,
+)  # Import Throttling middleware
+from BackEnd.src.middleware.rate_limiting import (
     RateLimitMiddleware,
 )  # Import Rate limiting middleware
 import os
@@ -47,10 +49,14 @@ app.add_middleware(RateLimitMiddleware)
 
 # Mount the visualizations directory for static file serving
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-visualizations_dir = os.path.join(root_dir, "visualizations")
+visualizations_dir = "app/BackEnd/" + os.path.join(root_dir, "visualizations")
 os.makedirs(visualizations_dir, exist_ok=True)
 app.mount(
-    "/visualizations", StaticFiles(directory=visualizations_dir), name="visualizations"
+    "/BackEnd/visualizations",  # This should match the URL path used in visualization_service.py
+    StaticFiles(
+        directory="/app/BackEnd/visualizations"
+    ),  # Use absolute path inside Docker container
+    name="visualizations",
 )
 
 # Include routers

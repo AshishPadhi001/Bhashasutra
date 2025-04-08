@@ -1,5 +1,5 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from src.services.bhasha_bot_service import BhashaBotService
+from BackEnd.src.services.bhasha_bot_service import BhashaBotService
 import logging
 import json
 

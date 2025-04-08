@@ -18,11 +18,21 @@ class Settings(BaseSettings):
     # Database settings
     DATABASE_URL: str = Field(..., env="DATABASE_URL")
 
-    # EGmini Api Key
-    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+    # Gemini API Key
+    GEMINI_API_KEY: Optional[str] = Field(default=None, env="GEMINI_API_KEY")
+
+    # Mail Configuration
+    SMTP_USERNAME: str = Field(..., env="SMTP_USERNAME")
+    SMTP_PASSWORD: str = Field(..., env="SMTP_PASSWORD")
+    SMTP_SERVER: str = Field(..., env="SMTP_SERVER")
+    SMTP_PORT: int = Field(..., env="SMTP_PORT")
+    SENDER_EMAIL: str = Field(..., env="SENDER_EMAIL")
+    MAIL_TLS: bool = Field(..., env="MAIL_TLS")
+    MAIL_SSL: bool = Field(..., env="MAIL_SSL")
+    USE_CREDENTIALS: bool = Field(..., env="USE_CREDENTIALS")
 
     class Config:
-        env_file = "E:\Bhashasutra\BackEnd\src\.env"
+        env_file = "E:\\Bhashasutra\\BackEnd\\src\\.env"
         env_file_encoding = "utf-8"
 
 
