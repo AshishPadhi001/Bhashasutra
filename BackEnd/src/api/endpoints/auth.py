@@ -14,7 +14,9 @@ from BackEnd.src.services.auth_service import (
 )
 from BackEnd.src.services.email_service import EmailService
 from BackEnd.src.utils.logger import logger
-from BackEnd.src.models import user
+from BackEnd.src.models.user import (
+    User as UserModel,
+)  # Import the actual model with a different name
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 email_service = EmailService()
@@ -24,14 +26,14 @@ def get_user_by_username(db: Session, username: str):
     """
     Retrieve a user from the database by their username.
     """
-    return db.query(User).filter(User.username == username).first()
+    return db.query(UserModel).filter(UserModel.username == username).first()
 
 
 def get_user_by_email(db: Session, email: str):
     """
     Retrieve a user from the database by their email.
     """
-    return db.query(User).filter(User.email == email).first()
+    return db.query(UserModel).filter(UserModel.email == email).first()
 
 
 def send_welcome_email_background(email: str, username: str):
@@ -41,7 +43,9 @@ def send_welcome_email_background(email: str, username: str):
 
 @router.post("/signup", response_model=User, status_code=status.HTTP_201_CREATED)
 def signup(
-    user: UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)
+    user_data: UserCreate,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
 ):
     """
     Create a new user with the provided username, email, and password.
@@ -49,11 +53,13 @@ def signup(
     try:
         # Check if username exists
         existing_username = (
-            db.query(user).filter(user.username == user.username).first()
+            db.query(UserModel).filter(UserModel.username == user_data.username).first()
         )
 
         # Check if email exists
-        existing_email = db.query(user).filter(user.email == user.email).first()
+        existing_email = (
+            db.query(UserModel).filter(UserModel.email == user_data.email).first()
+        )
 
         # Handle the different cases
         if existing_username and existing_email:
@@ -71,7 +77,7 @@ def signup(
             )
 
         # Create the user if no conflicts exist
-        db_user = create_user(db, user)
+        db_user = create_user(db, user_data)
 
         # Add email sending as background task
         background_tasks.add_task(
