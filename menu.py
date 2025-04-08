@@ -263,7 +263,8 @@ def main():
                         "13": "Reverse Text",
                         "14": "Count Unique Words",
                         "15": "Extract Proper Nouns",
-                        "16": "Back to Main Menu",
+                        "16": "Redability Score",
+                        "17": "Back to Main Menu",
                     },
                     basic.process,
                 )

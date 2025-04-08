@@ -434,6 +434,35 @@ async def extract_proper_nouns_text(request: BasicTextRequest):
         )
 
 
+@router.post("/readability-score/text", response_model=BasicTextResponse)
+async def readability_score_text(request: BasicTextRequest):
+    """Calculate readability score from raw text"""
+    try:
+        logger.info("Processing readability_score request for text input")
+        if not request.text or not request.text.strip():
+            logger.warning("Empty text received for readability_score")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Text cannot be empty"
+            )
+        result = process_text_function(request.text, "readability_score")
+        logger.info("Successfully processed readability_score request")
+        return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
+    except Exception as e:
+        logger.error(f"Error processing readability_score: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to process text: {str(e)}",
+        )
+
+
 ### 📌 FILE PROCESSING ENDPOINTS ###
 @router.post("/count-words/file", response_model=BasicFileResponse)
 async def count_words_file(file: UploadFile = File(...)):
@@ -885,6 +914,39 @@ async def extract_proper_nouns_file(file: UploadFile = File(...)):
     except Exception as e:
         logger.error(
             f"Error processing extract_proper_nouns for file {file.filename}: {str(e)}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to process file: {str(e)}",
+        )
+
+
+@router.post("/readability-score/file", response_model=BasicFileResponse)
+async def readability_score_file(file: UploadFile = File(...)):
+    try:
+        logger.info(f"Processing readability_score request for file: {file.filename}")
+        if not file:
+            logger.warning("No file received for readability_score")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="No file provided"
+            )
+        result = await process_file_function(file, "readability_score")
+        logger.info(
+            f"Successfully processed readability_score for file: {file.filename}"
+        )
+        return {"result": result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
+    except Exception as e:
+        logger.error(
+            f"Error processing readability_score for file {file.filename}: {str(e)}",
             exc_info=True,
         )
         raise HTTPException(
