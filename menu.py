@@ -280,7 +280,9 @@ def main():
                         "7": "TF-IDF Vectorization",
                         "8": "Language Detection",
                         "9": "Spell Checking & Grammar Correction",
-                        "10": "Back to Main Menu",
+                        "10": "Named Entity Recognition",
+                        "11": "Topic Modelling",
+                        "12": "Back to Main Menu",
                     },
                     advanced.process,
                 )

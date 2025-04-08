@@ -231,6 +231,62 @@ async def spell_check_and_grammar_text(request: TextRequest):
         raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
 
 
+@router.post("/named_entity_recognition/text", response_model=ProcessResponse)
+async def named_entity_recognition_text(request: TextRequest):
+    try:
+        logger.info(
+            f"Processing text with named_entity_recognition, text length: {len(request.text)}"
+        )
+        result = process_text_function(request.text, "named_entity_recognition")
+
+        # Format the result to show entity text and type
+        formatted_result = [
+            f"{entity}: {entity_type}" for entity, entity_type in result
+        ]
+
+        logger.debug("Named entity recognition completed successfully")
+        return {"result": formatted_result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
+    except Exception as e:
+        logger.error(f"Error in named_entity_recognition_text: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
+
+
+@router.post("/topic_modeling/text", response_model=ProcessResponse)
+async def topic_modeling_text(request: TextRequest):
+    try:
+        logger.info(
+            f"Processing text with topic_modeling, text length: {len(request.text)}"
+        )
+        result = process_text_function(request.text, "topic_modeling")
+
+        # Format the result to show topics
+        formatted_result = []
+        for topic_name, topic_words in result.items():
+            formatted_result.append(f"{topic_name}: {', '.join(topic_words)}")
+
+        logger.debug("Topic modeling completed successfully")
+        return {"result": formatted_result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
+    except Exception as e:
+        logger.error(f"Error in topic_modeling_text: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing text: {str(e)}")
+
+
 ### 📌 FILE PROCESSING ENDPOINTS ###
 @router.post("/word_tokenizer/file", response_model=ProcessResponse)
 async def word_tokenizer_file(file: UploadFile = File(...)):
@@ -438,4 +494,58 @@ async def spell_check_and_grammar_file(file: UploadFile = File(...)):
         raise
     except Exception as e:
         logger.error(f"Error in spell_check_and_grammar_file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+
+
+@router.post("/named_entity_recognition/file", response_model=ProcessResponse)
+async def named_entity_recognition_file(file: UploadFile = File(...)):
+    try:
+        logger.info(
+            f"Processing file with named_entity_recognition, filename: {file.filename}"
+        )
+        result = await process_file_function(file, "named_entity_recognition")
+
+        # Format the result to show entity text and type
+        formatted_result = [
+            f"{entity}: {entity_type}" for entity, entity_type in result
+        ]
+
+        logger.debug("Named entity recognition of file completed successfully")
+        return {"result": formatted_result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
+    except Exception as e:
+        logger.error(f"Error in named_entity_recognition_file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+
+
+@router.post("/topic_modeling/file", response_model=ProcessResponse)
+async def topic_modeling_file(file: UploadFile = File(...)):
+    try:
+        logger.info(f"Processing file with topic_modeling, filename: {file.filename}")
+        result = await process_file_function(file, "topic_modeling")
+
+        # Format the result to show topics
+        formatted_result = []
+        for topic_name, topic_words in result.items():
+            formatted_result.append(f"{topic_name}: {', '.join(topic_words)}")
+
+        logger.debug("Topic modeling of file completed successfully")
+        return {"result": formatted_result}
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            logger.warning("Rate limit exceeded")
+            raise HTTPException(
+                status_code=429,
+                detail="Rate limit exceeded. Please try again after some time.",
+            )
+        raise
+    except Exception as e:
+        logger.error(f"Error in topic_modeling_file: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
