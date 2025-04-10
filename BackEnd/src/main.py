@@ -13,6 +13,7 @@ from BackEnd.src.api.endpoints import (
     auth,
     summarizer,
     bhasha_bot,
+    translation,
 )
 
 from BackEnd.src.utils.logger import logger
@@ -68,6 +69,7 @@ app.include_router(sentiment.router)
 app.include_router(visualization.router)
 app.include_router(summarizer.router)
 app.include_router(bhasha_bot.router)
+app.include_router(translation.router)
 
 
 # Root endpoint

@@ -33,6 +33,13 @@ if not transformers:
     print("   pip install transformers torch")
     print("   Using fallback extractive summarization for text summarization.")
 
+# Check for deep_translator library instead of googletrans
+deep_translator = safe_import("deep_translator")
+if not deep_translator:
+    print("⚠ Warning: deep_translator library not found. Please install with:")
+    print("   pip install deep-translator")
+    print("   Translation features will be disabled.")
+
 # Safe import for modules with proper error handling
 text_summarizer_module = safe_import("Functions.text_summarizer")
 TextSummarizer = safe_import("Functions.text_summarizer", "TextSummarizer")
@@ -42,6 +49,9 @@ Sentiment = safe_import("Functions.Sentiment_analysis", "Sentiment")
 
 visualization_module = safe_import("Functions.text_visualization")
 TextVisualization = safe_import("Functions.text_visualization", "TextVisualization")
+
+translation_module = safe_import("Functions.translation")
+Translation = safe_import("Functions.translation", "Translation")
 
 
 def main_menu():
@@ -55,7 +65,7 @@ def main_menu():
     """
     while True:
         print("\n📌 Select Input Method:")
-        print("1. Enter Raw Text (for Sentiment Analysis, NLP functions)")
+        print("1. Enter Raw Text (for Sentiment Analysis, Translation, NLP functions)")
         print("2. Upload a File (TXT, DOCX, PDF for Text Processing & Visualization)")
         print("3. Exit")
         choice = input("Select an option (1-3): ").strip()
@@ -150,6 +160,11 @@ def main():
     else:
         print("ℹ️ Transformer models not available: Will use extractive summarization")
 
+    if deep_translator:
+        print("✅ Deep Translator library detected: Translation features available")
+    else:
+        print("ℹ️ Deep Translator library not available: Translation features disabled")
+
     while True:
         user_input, is_file = main_menu()
 
@@ -191,6 +206,14 @@ def main():
             except Exception as e:
                 print(f"⚠ Warning: Error initializing sentiment analysis: {e}")
 
+        # Initialize translation ONLY for raw text input
+        translation = None
+        if Translation and translation_module and not is_file and deep_translator:
+            try:
+                translation = Translation(user_input)
+            except Exception as e:
+                print(f"⚠ Warning: Error initializing translation: {e}")
+
         # Initialize text visualization ONLY for file input
         text_viz = None
         if TextVisualization and visualization_module and is_file:
@@ -225,6 +248,12 @@ def main():
             if sentiment:
                 print(f"{option_num}. Sentiment Analysis")
                 menu_options[str(option_num)] = "sentiment"
+                option_num += 1
+
+            # Add Translation if available (only for raw text input)
+            if translation:
+                print(f"{option_num}. Language Translation (Deep Translator)")
+                menu_options[str(option_num)] = "translation"
                 option_num += 1
 
             # Add Visualization if available (only for file input)
@@ -263,7 +292,7 @@ def main():
                         "13": "Reverse Text",
                         "14": "Count Unique Words",
                         "15": "Extract Proper Nouns",
-                        "16": "Redability Score",
+                        "16": "Readability Score",
                         "17": "Back to Main Menu",
                     },
                     basic.process,
@@ -306,6 +335,8 @@ def main():
                     )
                 elif option == "sentiment":
                     print("\n📊 Sentiment Analysis Result:", sentiment.analyze())
+                elif option == "translation":
+                    print("\n🌐 Translation Result:", translation.process())
                 elif option == "visualization":
                     menu_handler(
                         {

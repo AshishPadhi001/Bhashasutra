@@ -13,7 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN python -m textblob.download_corpora && \
     python -c "import nltk; nltk.download('punkt'); nltk.download('averaged_perceptron_tagger'); nltk.download('stopwords')" && \
-    pip install --upgrade pip
+    pip install --upgrade pip && \
+    python -m spacy download en_core_web_sm
+
 
 
 # Copy project files

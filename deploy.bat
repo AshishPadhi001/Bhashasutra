@@ -11,3 +11,4 @@ docker compose up --build -d
 echo "DOCKER PS"
 
 docker ps
+
