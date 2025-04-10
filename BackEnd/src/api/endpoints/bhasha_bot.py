@@ -6,18 +6,25 @@ import json
 router = APIRouter()
 logger = logging.getLogger("bhasha_bot")
 
+# Dictionary to store user connections and their associated BhashaBotService instances
+active_connections = {}
+
 
 @router.websocket("/ws/bhashagyan")
 async def bhashagyan_bot_endpoint(websocket: WebSocket):
     """
     WebSocket endpoint for BhashaGyan - AI assistant for ML, DL, and NLP questions.
-    No authentication required, no conversation history stored.
+    Includes conversation memory per connection.
     """
     await websocket.accept()
-    bhasha_bot_service = BhashaBotService()
+
+    # Create a unique instance for this connection
+    connection_id = id(websocket)
+    active_connections[connection_id] = BhashaBotService()
+    bhasha_bot_service = active_connections[connection_id]
 
     try:
-        logger.info("New client connected to BhashaGyan bot")
+        logger.info(f"New client connected to BhashaGyan bot (id: {connection_id})")
         await websocket.send_text(
             json.dumps(
                 {
@@ -29,7 +36,7 @@ async def bhashagyan_bot_endpoint(websocket: WebSocket):
 
         while True:
             data = await websocket.receive_text()
-            logger.info(f"Received message from user")
+            logger.info(f"Received message from user (id: {connection_id})")
 
             try:
                 user_message = json.loads(data)
@@ -46,7 +53,7 @@ async def bhashagyan_bot_endpoint(websocket: WebSocket):
                     )
                     continue
 
-                # Get response from Gemini without storing any data
+                # Get response from Gemini with memory
                 response = await bhasha_bot_service.get_response(question)
 
                 await websocket.send_text(
@@ -75,6 +82,15 @@ async def bhashagyan_bot_endpoint(websocket: WebSocket):
                 )
 
     except WebSocketDisconnect:
-        logger.info("Client disconnected from BhashaGyan bot")
+        logger.info(f"Client disconnected from BhashaGyan bot (id: {connection_id})")
+        # Clean up the memory when the connection closes
+        if connection_id in active_connections:
+            active_connections[connection_id].clear_memory()
+            del active_connections[connection_id]
+
     except Exception as e:
         logger.error(f"WebSocket error: {str(e)}")
+        # Make sure to clean up on any error
+        if connection_id in active_connections:
+            active_connections[connection_id].clear_memory()
+            del active_connections[connection_id]
