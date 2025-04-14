@@ -320,14 +320,40 @@ class Advanced:
         Identifies people, organizations, locations, dates, etc.
 
         Returns:
-            list: List of (entity_text, entity_type) tuples
+            list: List of (entity_text, entity_type) tuples with full entity type names
         """
         try:
+            # Define mapping from spaCy's abbreviated tags to full forms
+            entity_type_mapping = {
+                "PERSON": "PERSON",
+                "NORP": "NATIONALITY, RELIGIOUS, OR POLITICAL GROUP",
+                "FAC": "FACILITY (buildings, airports, highways, bridges, etc.)",
+                "ORG": "ORGANIZATION (companies, agencies, institutions, etc.)",
+                "GPE": "GEOPOLITICAL ENTITY (countries, cities, states)",
+                "LOC": "LOCATION (non-GPE locations, mountain ranges, bodies of water)",
+                "PRODUCT": "PRODUCT (objects, vehicles, foods, etc. - not services)",
+                "EVENT": "EVENT (named hurricanes, battles, wars, sports events, etc.)",
+                "WORK_OF_ART": "WORK OF ART (titles of books, songs, etc.)",
+                "LAW": "LAW (named documents made into laws)",
+                "LANGUAGE": "LANGUAGE (any named language)",
+                "DATE": "DATE (absolute or relative dates or periods)",
+                "TIME": "TIME (times smaller than a day)",
+                "PERCENT": "PERCENT (percentage, including “%”)",
+                "MONEY": "MONEY (monetary values, including unit)",
+                "QUANTITY": "QUANTITY (measurements, as of weight or distance)",
+                "ORDINAL": "ORDINAL NUMBER (first, second, etc.)",
+                "CARDINAL": "CARDINAL NUMBER (numerals that do not fall under another type)",
+                "EVENT": "EVENT (named hurricanes, battles, sports events, etc.)",
+            }
+
             # Use original text for better entity recognition
             doc = self.nlp(self.text)
 
-            # Extract entities with their types
-            entities = [(ent.text, ent.label_) for ent in doc.ents]
+            # Extract entities with their full type names
+            entities = [
+                (ent.text, entity_type_mapping.get(ent.label_, ent.label_))
+                for ent in doc.ents
+            ]
 
             if not entities:
                 return [("No entities found", "N/A")]

@@ -76,10 +76,11 @@ class VisualizationService:
             # Construct the URL to the generated image based on actual folder structure
             encoded_filename = filename.replace(
                 " ", "%20"
-            )  # URL encode spaces in the filename
-            image_url = f"{VisualizationService.BASE_URL}/BackEnd/visualizations/{folder_names[viz_type]}/{encoded_filename}/{encoded_filename}{file_suffixes[viz_type]}"
+            )  # URL encode spaces in the filename(Docker)
+            # image_url = f"{VisualizationService.BASE_URL}/BackEnd/visualizations/{folder_names[viz_type]}/{encoded_filename}/{encoded_filename}{file_suffixes[viz_type]}"
 
-            # image_url = f"{VisualizationService.BASE_URL}/visualizations/{folder_names[viz_type]}/{encoded_filename}/{encoded_filename}{file_suffixes[viz_type]}"
+            # Local Specific
+            image_url = f"{VisualizationService.BASE_URL}/visualizations/{folder_names[viz_type]}/{encoded_filename}/{encoded_filename}{file_suffixes[viz_type]}"
 
             # Prepare friendly name for display in message
             viz_names = {

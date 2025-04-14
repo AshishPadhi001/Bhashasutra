@@ -25,6 +25,7 @@ COPY . .
 RUN mkdir -p BackEnd/logs
 RUN mkdir -p BackEnd/temp
 RUN mkdir -p BackEnd/visualizations
+RUN mkdir -p BackEnd/vectordbs  # Add this line for vector databases
 
 # Set environment variables
 ENV PYTHONPATH=/app

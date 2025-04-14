@@ -10,6 +10,7 @@ services:
       - ./BackEnd/logs:/app/BackEnd/logs
       - ./BackEnd/temp:/app/BackEnd/temp
       - ./BackEnd/visualizations:/app/BackEnd/visualizations
+      - ./BackEnd/vectordbs:/app/BackEnd/vectordbs  # Add this line for vector databases
     env_file:
       - ./BackEnd/src/.env
     networks:

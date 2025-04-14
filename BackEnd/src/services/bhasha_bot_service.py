@@ -10,7 +10,7 @@ from langchain_core.prompts import (
 )
 from langchain.chains import LLMChain
 from BackEnd.src.core.config import settings
-from src.utils.prompt import prompt
+from BackEnd.src.utils.prompt import prompt
 
 logger = logging.getLogger("bhasha_bot")
 

@@ -1,5 +1,9 @@
 @echo off
 
+echo "Clear Screen"
+
+cls
+
 echo "DOCKER DOWN"
 
 docker compose down --remove-orphans
